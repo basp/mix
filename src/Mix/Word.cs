@@ -56,13 +56,13 @@ public struct Word : IEquatable<Word>
     }
 
     /// <summary>
-    /// Gets or sets the value of this word in the section from first to last.
+    /// Gets or sets the value of this word in the fields from first to last.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Reading a section always results in an *aligned* result. So that if you
-    /// read the first two bytes of a value (as a section) then those two bytes
-    /// will be shifted so that they align with the right of the 
+    /// Reading a field range always results in an *aligned* result. So that if 
+    /// you read the first two bytes of a value (as a section) then those two 
+    /// bytes will be shifted so that they align with the right of the 
     /// <see cref="Word"/>.
     /// </para>
     /// <para>
