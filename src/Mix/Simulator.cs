@@ -144,12 +144,25 @@ public class Simulator
         var lshift = first;
         var v = new Word();
 
+        // As with the `Store` method we deal with the first field if it
+        // includes the sign bit. If `first` is not the sign field then we
+        // just ignore it and assume positive (0).
         if (first == 0)
         {
             v[0] = w[0];
             first += 1;
         }
 
+        // Instead of shifting to the right we now need to left shift our
+        // values from ram into the register. This is important so that when
+        // we load previously stored values from memory using the same field
+        // index we can assume the same results instead of having to shift
+        // our words around.
+        // 
+        // When we *LOAD* we need to *right align* the results *before* loading 
+        // them into memory but when we *STORE* results from memory they are
+        // left aligned *before* they are loaded into the register.
+        // store we 
         for (var j = first; j <= last; j++)
         {
             v[j - lshift] = w[j];
