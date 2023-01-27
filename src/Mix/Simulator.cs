@@ -26,18 +26,23 @@ public class Simulator
 
     public Simulator()
     {
+        // Add a *dead* register so that the names of the index
+        // registers properly map to their register index in 
+        // the list of index registers (i.e. I1 = 1, I2 = 2, etc.).
+        // 
+        // This dead register should be ignored by any instructions.
+        // It is incapable of storing any value - it's bits will always be 
+        // zero.
+        var dead = new DeadRegister();
         this.indexRegisters = new Register[]
         {
-            // Add a *dead* register so that the names of the index
-            // registers properly map to their register index in 
-            // the list of index registers (i.e. I1 = 1, I2 = 2, etc.)
-            new DeadRegister(),
-            I1,
-            I2,
-            I3,
-            I4,
-            I5,
-            I6,
+            dead,   // 000 
+            I1,     // I=1
+            I2,     // I=2
+            I3,     // I=3
+            I4,     // I=4
+            I5,     // I=5
+            I6,     // I=6
         };
     }
 
