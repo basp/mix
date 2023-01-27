@@ -2,7 +2,7 @@ namespace Mix;
 
 public class Simulator
 {
-    private IndexRegister[] indexRegisters;
+    private Register[] indexRegisters;
 
     public Word[] Memory { get; } = new Word[4000];
 
@@ -26,12 +26,12 @@ public class Simulator
 
     public Simulator()
     {
-        this.indexRegisters = new[]
+        this.indexRegisters = new Register[]
         {
             // Add a ghost register so that the names of the index
             // registers properly map to their register index in 
-            // the list of index registers.
-            new IndexRegister("GHOST"),
+            // the list of index registers (i.e. I1 = 1, I2 = 2, etc.)
+            new DeadRegister(),
             I1,
             I2,
             I3,

@@ -38,6 +38,11 @@ public struct Word : IEquatable<Word>
 
     private BitVector32 bits;
 
+    public Word(int data)
+    {
+        this.bits = new BitVector32(data);
+    }
+
     public int this[int index]
     {
         get => this.bits[fields[index].Section];
