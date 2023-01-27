@@ -144,9 +144,8 @@ public class Simulator
         var lshift = first;
         var v = new Word();
 
-        // As with the `Store` method we deal with the first field if it
-        // includes the sign bit. If `first` is not the sign field then we
-        // just ignore it and assume positive (0).
+        // As with the `Store` method the sign field needs special treatment if
+        // it is included in the field specificatgion.
         if (first == 0)
         {
             v[0] = w[0];
