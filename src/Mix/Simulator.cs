@@ -2,6 +2,20 @@ namespace Mix;
 
 public class Simulator
 {
+    private static readonly DeadRegister dead = new DeadRegister();
+
+    private const int SIGN = 0;
+
+    private const int BYTE1 = 1;
+
+    private const int BYTE2 = 2;
+
+    private const int BYTE3 = 3;
+    
+    private const int BYTE4 = 4;
+
+    private const int BYTE5 = 5;
+
     private Register[] indexRegisters;
 
     public Word[] Memory { get; } = new Word[4000];
@@ -33,7 +47,6 @@ public class Simulator
         // This dead register should be ignored by any instructions.
         // It is incapable of storing any value - its bits will always be 
         // zero.
-        var dead = new DeadRegister();
         this.indexRegisters = new Register[]
         {
             dead,   // 000 
@@ -110,16 +123,26 @@ public class Simulator
     public void STX(int address, int i = 0, int first = 0, int last = 5) =>
         this.Memory[address + i] = Store(this.X, address, i, first, last);
 
-    private void LDiN(
+    private void STi(
         int register,
         int address,
         int i = 0,
-        int first = 0,
+        int first = 4,
         int last = 5)
     {
         var reg = this.indexRegisters[register];
-        reg.Data = Load(address, i, first, last);
-        reg.Sign = 1;
+        this.Memory[address + i] = Store(reg, address, i, first, last);
+    }
+
+    private void STiN(
+        int register,
+        int address,
+        int i = 0,
+        int first = 4,
+        int last = 5)
+    {
+        this.STi(register, address, i, first, last);
+        this.Memory[address + i].Sign = 1;
     }
 
     private void LDi(
@@ -131,6 +154,18 @@ public class Simulator
     {
         var reg = this.indexRegisters[register];
         reg.Data = Load(address, i, first, last);
+    }
+
+    private void LDiN(
+        int register,
+        int address,
+        int i = 0,
+        int first = 0,
+        int last = 5)
+    {
+        var reg = this.indexRegisters[register];
+        reg.Data = Load(address, i, first, last);
+        reg.Sign = 1;
     }
 
     private Word Store(
@@ -148,7 +183,7 @@ public class Simulator
         // it is included in the field specificatgion.
         if (first == 0)
         {
-            v[0] = w[0];
+            v[SIGN] = w[SIGN];
             first += 1;
         }
 
@@ -187,7 +222,7 @@ public class Simulator
             // the actual value of word need to be shifted to the right before
             // we load them in into the register. The sign field should be
             // excluded from this shifting operation.
-            v[0] = w[0];
+            v[SIGN] = w[SIGN];
             first += 1;
         }
 

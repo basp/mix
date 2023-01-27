@@ -114,34 +114,71 @@ public struct Word : IEquatable<Word>
     }
 
     /// <summary>
+    /// Gets a value indicating whether all the bits in this <see cref="Word"/>
+    /// instance are zero.
     /// </summary>
     public bool IsZero => this.bits.Data == 0;
 
     /// <summary>
+    /// Gets the sign of this <see cref="Word"/> instance.
     /// </summary>
-    public int Sign => this.bits[fields[0].Section];
+    /// <remarks>
+    /// The sign field is a one bit value that is set to one (1) when the value is
+    /// negative. Otherwise it is set to zero (0).
+    /// </remarks>
+    public int Sign
+    {
+        get => this.bits[fields[0].Section];
+        set => this.bits[fields[0].Section] = value;
+    }
 
     /// <summary>
+    /// Gets the value of the first byte in this <see cref="Word"/> instance.
     /// </summary>
-    public int Byte1 => this.bits[fields[1].Section];
+    public int Byte1
+    {
+        get => this.bits[fields[1].Section];
+        set => this.bits[fields[1].Section] = value;
+    }
 
     /// <summary>
+    /// Gets the value of the second byte in this <see cref="Word"/> instance.
     /// </summary>
-    public int Byte2 => this.bits[fields[2].Section];
+    public int Byte2
+    {
+        get => this.bits[fields[2].Section];
+        set => this.bits[fields[2].Section] = value;
+    }
 
     /// <summary>
+    /// Gets the value of the third byte in this <see cref="Word"/> instance.
     /// </summary>
-    public int Byte3 => this.bits[fields[3].Section];
+    public int Byte3
+    {
+        get => this.bits[fields[3].Section];
+        set => this.bits[fields[3].Section] = value;
+    }
 
     /// <summary>
+    /// Gets the value of the fourth byte in this <see cref="Word"/> instance.
     /// </summary>
-    public int Byte4 => this.bits[fields[4].Section];
+    public int Byte4
+    {
+        get => this.bits[fields[4].Section];
+        set => this.bits[fields[4].Section] = value;
+    }
 
     /// <summary>
+    /// Gets the value of the fifth byte in this <see cref="Word"/> instance.
     /// </summary>
-    public int Byte5 => this.bits[fields[5].Section];
+    public int Byte5
+    {
+        get => this.bits[fields[5].Section];
+        set => this.bits[fields[5].Section] = value;
+    }
 
     /// <summary>
+    /// Gets the integer value of this <see cref="Word"/> instance.
     /// </summary>
     public int Value => this.bits.Data;
 
@@ -168,6 +205,7 @@ public struct Word : IEquatable<Word>
             this.bits,
             "}");
 
+    /// <inheritdoc/>
     public bool Equals(Word other) =>
         this.bits == other.bits;
 

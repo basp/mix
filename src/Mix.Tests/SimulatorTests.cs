@@ -158,6 +158,12 @@ public class SimulatorTests
             sim => sim.X);
     }
 
+    [Fact]
+    public void TestFieldSpecST1()
+    {
+
+    }
+
     private void TestStoreRegister(
         Action<Simulator, int, int, int> store,
         Func<Simulator, Register> selectRegister)
