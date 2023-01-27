@@ -38,17 +38,38 @@ public struct Word : IEquatable<Word>
 
     private BitVector32 bits;
 
+    /// <summary>
+    /// Initializes a new <see cref="Word"/> instance using existing data.
+    /// </summary>
     public Word(int data)
     {
         this.bits = new BitVector32(data);
     }
 
+    /// <summary>
+    /// Gets the field value of this word at given index.
+    /// </summary>
     public int this[int index]
     {
         get => this.bits[fields[index].Section];
         set => this.bits[fields[index].Section] = value;
     }
 
+    /// <summary>
+    /// Gets or sets the value of this word in the section from first to last.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Reading a section always results in an *aligned* result. So that if you
+    /// read the first two bytes of a value (as a section) then those two bytes
+    /// will be shifted so that they align with the right of the 
+    /// <see cref="Word"/>.
+    /// </para>
+    /// <para>
+    /// In effect his means you can store integer values in sections within a 
+    /// word and they *will* be preserved correctly when you read them.
+    /// </para>
+    /// </remarks>
     public int this[int first, int last]
     {
         get
@@ -63,6 +84,21 @@ public struct Word : IEquatable<Word>
         }
     }
 
+    /// <summary>
+    /// Gets or sets the value of this word based on a field specification.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If the value to be written is greater than would be allowed by the 
+    /// given <see cref="FieldSpec"/> value values might get clobbered over.
+    /// </para>
+    /// <para>
+    /// Clients should be aware of the size of registers and memory cells and
+    /// their capabilities and restrictions. If the simulator is asked to do 
+    /// something which might seem unreasonable for a human it will hapilly
+    /// comply in a some way. This may or may not be the correct way.
+    /// </para>
+    /// </remarks>
     public int this[FieldSpec spec]
     {
         get
@@ -77,25 +113,43 @@ public struct Word : IEquatable<Word>
         }
     }
 
+    /// <summary>
+    /// </summary>
     public bool IsZero => this.bits.Data == 0;
 
+    /// <summary>
+    /// </summary>
     public int Sign => this.bits[fields[0].Section];
 
+    /// <summary>
+    /// </summary>
     public int Byte1 => this.bits[fields[1].Section];
 
+    /// <summary>
+    /// </summary>
     public int Byte2 => this.bits[fields[2].Section];
 
+    /// <summary>
+    /// </summary>
     public int Byte3 => this.bits[fields[3].Section];
 
+    /// <summary>
+    /// </summary>
     public int Byte4 => this.bits[fields[4].Section];
 
+    /// <summary>
+    /// </summary>
     public int Byte5 => this.bits[fields[5].Section];
 
+    /// <summary>
+    /// </summary>
     public int Value => this.bits.Data;
 
+    /// <inheritdoc/>
     public override int GetHashCode() =>
         this.Value.GetHashCode();
 
+    /// <inheritdoc/>
     public override bool Equals([NotNullWhen(true)] object? obj)
     {
         if (obj is Word other)
@@ -106,6 +160,7 @@ public struct Word : IEquatable<Word>
         return false;
     }
 
+    /// <inheritdoc/>
     public override string ToString() =>
         string.Concat(
             nameof(Word),

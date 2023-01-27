@@ -16,7 +16,7 @@ public struct FieldSpec : IEquatable<FieldSpec>
 
     /// <summary>
     /// Initializes a new <see cref="FieldSpec"/> based on a first and last
-    /// byte index of a MIX word.
+    /// field index of a MIX word.
     /// </summary>
     public FieldSpec(int first, int last)
     {
@@ -24,13 +24,13 @@ public struct FieldSpec : IEquatable<FieldSpec>
     }
 
     /// <summary>
-    /// Returns raw value of this field specification.
+    /// Returns integer value of this field specification.
     /// </summary>
     public int Value => this.value;
 
     /// <summary>
     /// Deconstructs this field specification in a pair of first and last 
-    /// values. That represent the start and end of the byte range that
+    /// values. They represent the start and end of the byte range that
     /// we want to address.
     /// </summary>
     public (int, int) Deconstruct()
