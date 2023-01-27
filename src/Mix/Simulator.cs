@@ -28,7 +28,7 @@ public class Simulator
     {
         this.indexRegisters = new Register[]
         {
-            // Add a ghost register so that the names of the index
+            // Add a *dead* register so that the names of the index
             // registers properly map to their register index in 
             // the list of index registers (i.e. I1 = 1, I2 = 2, etc.)
             new DeadRegister(),
