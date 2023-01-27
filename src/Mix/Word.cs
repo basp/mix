@@ -180,6 +180,9 @@ public struct Word : IEquatable<Word>
     /// <summary>
     /// Gets the integer value of this <see cref="Word"/> instance.
     /// </summary>
+    /// <remarks>
+    /// This just returns the raw word data as an <see cref="int"/>.
+    /// </remarks>
     public int Value => this.bits.Data;
 
     /// <inheritdoc/>
