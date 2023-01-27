@@ -1,5 +1,11 @@
 namespace Mix;
 
+/// <summary>
+/// A register that is completetly dead.
+/// </summary>
+/// <remarks>
+/// All bits of this register will always be zero.
+/// </remarks>
 public class DeadRegister : Register
 {
     public DeadRegister()
