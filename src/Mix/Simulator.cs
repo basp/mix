@@ -31,7 +31,7 @@ public class Simulator
         // the list of index registers (i.e. I1 = 1, I2 = 2, etc.).
         // 
         // This dead register should be ignored by any instructions.
-        // It is incapable of storing any value - it's bits will always be 
+        // It is incapable of storing any value - its bits will always be 
         // zero.
         var dead = new DeadRegister();
         this.indexRegisters = new Register[]
