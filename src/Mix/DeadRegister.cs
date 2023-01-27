@@ -16,37 +16,37 @@ public class DeadRegister : Register
     public override int Sign
     {
         get => 0;
-        set { }
+        set { }     // Nope.
     }
 
     public override int Byte1
     {
         get => 0;
-        set { }
+        set { }     // Nice try.
     }
 
     public override int Byte2
     {
         get => 0;
-        set { }
+        set { }     // Just ignoring.
     }
 
     public override int Byte3
     {
         get => 0;
-        set { }
+        set { }     // Doesn't work.
     }
 
     public override int Byte4
     {
         get => 0;
-        set { }
+        set { }     // Also doesn't work.
     }
 
     public override int Byte5
     {
         get => 0;
-        set { }
+        set { }     // Just give up.
     }
 
     public override Word Data => new Word(0);
