@@ -11,7 +11,7 @@ public class Simulator
     private const int BYTE2 = 2;
 
     private const int BYTE3 = 3;
-    
+
     private const int BYTE4 = 4;
 
     private const int BYTE5 = 5;
@@ -118,10 +118,28 @@ public class Simulator
         LDiN(6, address, i, first, last);
 
     public void STA(int address, int i = 0, int first = 0, int last = 5) =>
-        this.Memory[address + i] = Store(this.A, address, i, first, last);
+        this.Memory[address + i] = Store(this.A, i, address, first, last);
 
     public void STX(int address, int i = 0, int first = 0, int last = 5) =>
-        this.Memory[address + i] = Store(this.X, address, i, first, last);
+        this.Memory[address + i] = Store(this.X, i, address, first, last);
+
+    public void ST1(int address, int i = 0, int first = 0, int last = 5) =>
+        this.STi(1, address, i, first, last);
+
+    public void ST2(int address, int i = 0, int first = 0, int last = 5) =>
+        this.STi(2, address, i, first, last);
+
+    public void ST3(int address, int i = 0, int first = 0, int last = 5) =>
+        this.STi(3, address, i, first, last);
+
+    public void ST4(int address, int i = 0, int first = 0, int last = 5) =>
+        this.STi(4, address, i, first, last);
+
+    public void ST5(int address, int i = 0, int first = 0, int last = 5) =>
+        this.STi(5, address, i, first, last);
+
+    public void ST6(int address, int i = 0, int first = 0, int last = 5) =>
+        this.STi(6, address, i, first, last);
 
     private void STi(
         int register,
@@ -131,7 +149,7 @@ public class Simulator
         int last = 5)
     {
         var reg = this.indexRegisters[register];
-        this.Memory[address + i] = Store(reg, address, i, first, last);
+        this.Memory[address + i] = Store(reg, i, address, first, last);
     }
 
     private void STiN(
@@ -153,7 +171,11 @@ public class Simulator
         int last = 5)
     {
         var reg = this.indexRegisters[register];
-        reg.Data = Load(address, i, first, last);
+        var w = Load(address, i, first, last);
+        w[1] = 0;
+        w[2] = 0;
+        w[3] = 0;
+        reg.Data = w;
     }
 
     private void LDiN(
@@ -163,43 +185,30 @@ public class Simulator
         int first = 0,
         int last = 5)
     {
+        this.LDi(register, address, i, first, last);
         var reg = this.indexRegisters[register];
-        reg.Data = Load(address, i, first, last);
         reg.Sign = 1;
     }
 
     private Word Store(
         Register reg,
         int address,
-        int i = 0,
+        int i,
         int first = 0,
         int last = 5)
     {
-        var w = reg.Data;
-        var lshift = first;
-        var v = new Word();
+        var v = this.Memory[address + i];
+        var shift = 5 - last;
 
-        // As with the `Store` method the sign field needs special treatment if
-        // it is included in the field specificatgion.
         if (first == 0)
         {
-            v[SIGN] = w[SIGN];
+            v[SIGN] = reg.Data[SIGN];
             first += 1;
         }
 
-        // Instead of shifting to the right we now need to left shift our
-        // values from ram into the register. This is important so that when
-        // we load previously stored values from memory using the same field
-        // index we can assume the same results instead of having to shift
-        // our words around.
-        // 
-        // When we *LOAD* we need to *right align* the results *before* loading 
-        // them into memory but when we *STORE* results from memory they are
-        // left aligned *before* they are loaded into the register.
-        // store we 
         for (var j = first; j <= last; j++)
         {
-            v[j - lshift] = w[j];
+            v[j] = reg.Data[j + shift];
         }
 
         return v;
@@ -226,7 +235,8 @@ public class Simulator
             first += 1;
         }
 
-        // Shift all the bytes `rshift` fields to the right.
+        // Shift all the bytes `rshift` fields to the right before storing
+        // them in the register.
         for (var j = first; j <= last; j++)
         {
             v[j + rshift] = w[j];

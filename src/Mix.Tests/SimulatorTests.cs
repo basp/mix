@@ -33,7 +33,7 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecLD1()
     {
-        TestRegister(
+        TestIndexRegister(
             (sim, address, first, last) => sim.LD1(address, 0, first, last),
             sim => sim.I1);
     }
@@ -41,7 +41,7 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecLD2()
     {
-        TestRegister(
+        TestIndexRegister(
             (sim, address, first, last) => sim.LD2(address, 0, first, last),
             sim => sim.I2);
     }
@@ -49,7 +49,7 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecLD3()
     {
-        TestRegister(
+        TestIndexRegister(
             (sim, address, first, last) => sim.LD3(address, 0, first, last),
             sim => sim.I3);
     }
@@ -57,7 +57,7 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecLD4()
     {
-        TestRegister(
+        TestIndexRegister(
             (sim, address, first, last) => sim.LD4(address, 0, first, last),
             sim => sim.I4);
     }
@@ -65,7 +65,7 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecLD5()
     {
-        TestRegister(
+        TestIndexRegister(
             (sim, address, first, last) => sim.LD5(address, 0, first, last),
             sim => sim.I5);
     }
@@ -73,7 +73,7 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecLD6()
     {
-        TestRegister(
+        TestIndexRegister(
             (sim, address, first, last) => sim.LD6(address, 0, first, last),
             sim => sim.I6);
     }
@@ -151,7 +151,15 @@ public class SimulatorTests
     }
 
     [Fact]
-    public void TestDefaultSTX()
+    public void TestFieldSpecSTA()
+    {
+        TestStoreRegister(
+            (sim, address, first, last) => sim.STA(address, 0, first, last),
+            sim => sim.A);
+    }
+
+    [Fact]
+    public void TestFieldSpecSTX()
     {
         TestStoreRegister(
             (sim, address, first, last) => sim.STX(address, 0, first, last),
@@ -161,13 +169,6 @@ public class SimulatorTests
     [Fact]
     public void TestFieldSpecST1()
     {
-
-    }
-
-    private void TestStoreRegister(
-        Action<Simulator, int, int, int> store,
-        Func<Simulator, Register> selectRegister)
-    {
         var sim = new Simulator();
         sim.Memory[2000][0] = 1;
         sim.Memory[2000][1] = 1;
@@ -176,8 +177,28 @@ public class SimulatorTests
         sim.Memory[2000][4] = 4;
         sim.Memory[2000][5] = 5;
 
-        var reg = selectRegister(sim);
+        sim.I1.Byte4 = 9;
+        sim.I1.Byte5 = 0;
 
+        sim.ST1(2000, 0, 4, 5);
+    }
+
+    private void TestStoreRegister(
+        Action<Simulator, int, int, int> store,
+        Func<Simulator, Register> selectRegister)
+    {
+        var w = new Word()
+        {
+            [0] = 1,
+            [1] = 1,
+            [2] = 2,
+            [3] = 3,
+            [4] = 4,
+            [5] = 5,
+        };
+
+        var sim = new Simulator();
+        var reg = selectRegister(sim);
         reg.Sign = 0;
         reg.Byte1 = 6;
         reg.Byte2 = 7;
@@ -185,9 +206,59 @@ public class SimulatorTests
         reg.Byte4 = 9;
         reg.Byte5 = 0;
 
+        sim.Memory[2000] = w;
         store(sim, 2000, 0, 5);
+        Assert.Equal(0, sim.Memory[2000][0]);
+        Assert.Equal(6, sim.Memory[2000][1]);
+        Assert.Equal(7, sim.Memory[2000][2]);
+        Assert.Equal(8, sim.Memory[2000][3]);
+        Assert.Equal(9, sim.Memory[2000][4]);
+        Assert.Equal(0, sim.Memory[2000][5]);
 
-        Assert.Equal(reg.Data, sim.Memory[2000]);        
+        sim.Memory[2000] = w;
+        store(sim, 2000, 1, 5);
+        Assert.Equal(1, sim.Memory[2000][0]);
+        Assert.Equal(6, sim.Memory[2000][1]);
+        Assert.Equal(7, sim.Memory[2000][2]);
+        Assert.Equal(8, sim.Memory[2000][3]);
+        Assert.Equal(9, sim.Memory[2000][4]);
+        Assert.Equal(0, sim.Memory[2000][5]);
+
+        sim.Memory[2000] = w;
+        store(sim, 2000, 5, 5);
+        Assert.Equal(1, sim.Memory[2000][0]);
+        Assert.Equal(1, sim.Memory[2000][1]);
+        Assert.Equal(2, sim.Memory[2000][2]);
+        Assert.Equal(3, sim.Memory[2000][3]);
+        Assert.Equal(4, sim.Memory[2000][4]);
+        Assert.Equal(0, sim.Memory[2000][5]);
+
+        sim.Memory[2000] = w;
+        store(sim, 2000, 2, 2);
+        Assert.Equal(1, sim.Memory[2000][0]);
+        Assert.Equal(1, sim.Memory[2000][1]);
+        Assert.Equal(0, sim.Memory[2000][2]);
+        Assert.Equal(3, sim.Memory[2000][3]);
+        Assert.Equal(4, sim.Memory[2000][4]);
+        Assert.Equal(5, sim.Memory[2000][5]);
+
+        sim.Memory[2000] = w;
+        store(sim, 2000, 2, 3);
+        Assert.Equal(1, sim.Memory[2000][0]);
+        Assert.Equal(1, sim.Memory[2000][1]);
+        Assert.Equal(9, sim.Memory[2000][2]);
+        Assert.Equal(0, sim.Memory[2000][3]);
+        Assert.Equal(4, sim.Memory[2000][4]);
+        Assert.Equal(5, sim.Memory[2000][5]);        
+
+        sim.Memory[2000] = w;
+        store(sim, 2000, 0, 1);
+        Assert.Equal(0, sim.Memory[2000][0]);
+        Assert.Equal(0, sim.Memory[2000][1]);
+        Assert.Equal(2, sim.Memory[2000][2]);
+        Assert.Equal(3, sim.Memory[2000][3]);
+        Assert.Equal(4, sim.Memory[2000][4]);
+        Assert.Equal(5, sim.Memory[2000][5]);        
     }
 
     private void TestIndexLoadN(

@@ -26,14 +26,14 @@ public struct Word : IEquatable<Word>
     }
 
     private static readonly Field[] fields =
-        new []
+        new[]
         {
-            new Field(sizeInBits: 1, offset: 0),
-            new Field(sizeInBits: 6, offset: 1),
-            new Field(sizeInBits: 6, offset: 7),
-            new Field(sizeInBits: 6, offset: 13),
-            new Field(sizeInBits: 6, offset: 19),
-            new Field(sizeInBits: 6, offset: 25),            
+            new Field(sizeInBits: 1, offset: 0),        // Sign
+            new Field(sizeInBits: 6, offset: 1),        // Byte 1
+            new Field(sizeInBits: 6, offset: 7),        // Byte 2
+            new Field(sizeInBits: 6, offset: 13),       // Byte 3
+            new Field(sizeInBits: 6, offset: 19),       // Byte 4
+            new Field(sizeInBits: 6, offset: 25),       // Byte 5
         };
 
     private BitVector32 bits;
@@ -226,6 +226,7 @@ public struct Word : IEquatable<Word>
             .Range(first, count)
             .Select(i => fields[i].SizeInBits)
             .Sum();
+            
         return BitVector32.CreateSection(sizeInBits, offset);
     }
 
